@@ -5,6 +5,7 @@ let bodyParser = require("body-parser")
 // 引入路由
 let router = require("./router/router")
 
+
 // 使用express模块
 let app = express()
 // 配置bodyParse
@@ -27,7 +28,9 @@ app.all('*',function(req,res,next){
 // 后台接口
 app.post("/getNews",router.getNews)
 app.post("/getNewsByPage",router.getNewsByPage)
-app.post
+app.post("/getNewsById",router.getNewsById)
+app.post("/addNews",router.addNews)
+app.post("/deletNews",router.deletNews)
 
 // 监听服务器端口
 app.listen(3000,function(){

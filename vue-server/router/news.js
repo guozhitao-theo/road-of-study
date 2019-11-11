@@ -1,5 +1,17 @@
 // 引入数据库操作
 let data = require("../controler/data/data")
+// 引入multer 
+let multer = require("multer")
+let Storage = multer.diskStorage({
+    destination:function(req,file,callback){
+        callback(null,'./fileloader');
+    },
+    filename:function(req,file,callback){
+        callback(null,file.fieldname+'_'+Date.now()+'_'+file.originalname)
+    }
+})
+let upload = multer({storage:Storage}).array('newsUploader')
+
 module.exports = {
     getNews:async function(req,res){
         let result = await data.getNews()
@@ -16,6 +28,25 @@ module.exports = {
             })
         }
     },
+	getNewsById:async function(req,res){
+		console.log(req.body)
+		let id = req.body.id
+		console.log(id)
+		if(!id){
+			return res.json({
+				status:404,
+				message: '请确认数据的完整性'
+			})
+		}
+		let result = await data.getNewsById(id)
+		if(result){
+			res.json({
+				status:200,
+				message:'查询成功',
+				data: result
+			})
+		}
+	},
     getNewsByPage: async function(req,res){
         let page = Number(req.body.page)
         let count = Number(req.body.count)
@@ -51,36 +82,123 @@ module.exports = {
         }
     },
 	addNews: async function(req,res) {
+		upload(req,res,async function(err){
+			if(err){
+				return res.json({
+                    status:531,
+                    message:'文件上传失败'
+                })
+			}else{
+				let title = req.body.title
+				console.log(title)
+				let time = req.body.time
+				//let img = req.body.title
+				let detial = req.body.detial
+				if(!title){
+					return res.json({
+						status: 404,
+						message:'请确认数据的完整性'
+					})
+				}
+				if(!time){
+					return res.json({
+						status: 404,
+						message: '请确认数据的完整性'
+					})
+				}
+				//if(!img){
+				//	return res.json({
+				//		status: 404,
+				//		message: '请确认数据的完整性'
+				//	})
+				//}
+				if(!detial){
+					return res.json({
+						status: 404,
+						message: '请确认数据的完整性'
+					})
+				}
+				let arr = [title,time,detial]
+				let result = await data.addNews(arr)
+				if(result){
+					return res.json({
+						status: 200,
+						message: '添加新闻成功'
+					})
+				}else{
+					return res.json({
+						status:500,
+						message:'添加新闻失败'
+					})
+				}
+			}
+		})
+	},
+	updateNews: async function(req,res){
 		let title = req.body.title
-		let time = req.body.title
-		let img = req.body.title
-		let detial = req.body.title
+		let time = req.body.time
+		let detial = req.body.detial
+		let id = req.body.id
+		if(!id){
+			return res.json({
+				status: 404,
+				message:'请确认修改的信息id'
+			})
+		}
 		if(!title){
 			return res.json({
 				status: 404,
-				message:'请确认数据的完整性'
+				message:'请确认修改信息'
 			})
 		}
 		if(!time){
 			return res.json({
 				status: 404,
-				message: '请确认数据的完整性'
+				message: '请确认修改的信息'
 			})
 		}
-		if(!img){
+		if(!time){
 			return res.json({
 				status: 404,
-				message: '请确认数据的完整性'
+				message: '请确认修改的信息'
 			})
 		}
-		if(!detial){
+		let arr = [title,time,detial,id]
+		let result = await data.deletNews(arr)
+		if(result){
 			return res.json({
-				status: 404,
-				message: '请确认数据的完整性'
+				status: 200,
+				message: '修改数据成功'
+			})
+		}else{
+			return res.json({
+				status: 500,
+				message: '修改商品失败'
 			})
 		}
-		let arr = [title,time,img,detial]
-		//let result = await data.
 		
+	},
+	deletNews: async function(req,res){
+		let id = req.body.id
+		if(!id){
+			return res.json({
+				status: 404,
+				message: ''
+			})
+		}
+		let  result = await data.deletNews(id)
+		console.log(result)
+		if(result){
+			return res.json({
+				status:200,
+				message:'删除成功'
+			})
+		}else{
+			return res.json({
+				status: 500,
+				message:'删除失败'
+			})
+		}
 	}
+	
 }
