@@ -49,5 +49,38 @@ module.exports = {
                 message: '获取新闻失败'
             })
         }
-    }
+    },
+	addNews: async function(req,res) {
+		let title = req.body.title
+		let time = req.body.title
+		let img = req.body.title
+		let detial = req.body.title
+		if(!title){
+			return res.json({
+				status: 404,
+				message:'请确认数据的完整性'
+			})
+		}
+		if(!time){
+			return res.json({
+				status: 404,
+				message: '请确认数据的完整性'
+			})
+		}
+		if(!img){
+			return res.json({
+				status: 404,
+				message: '请确认数据的完整性'
+			})
+		}
+		if(!detial){
+			return res.json({
+				status: 404,
+				message: '请确认数据的完整性'
+			})
+		}
+		let arr = [title,time,img,detial]
+		//let result = await data.
+		
+	}
 }

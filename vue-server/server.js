@@ -27,6 +27,7 @@ app.all('*',function(req,res,next){
 // 后台接口
 app.post("/getNews",router.getNews)
 app.post("/getNewsByPage",router.getNewsByPage)
+app.post
 
 // 监听服务器端口
 app.listen(3000,function(){

@@ -16,6 +16,9 @@ module.exports = {
         })
 		console.log(result)
         return result
-    }
+    },
+	//addNews: async function (data) {
+	//	let sql = 'insert into news()'
+	//}
 
 }
