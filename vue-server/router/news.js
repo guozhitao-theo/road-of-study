@@ -1,5 +1,6 @@
 // 引入数据库操作
 let data = require("../controler/data/data")
+let moment = require("moment")
 // 引入multer 
 let multer = require("multer")
 let Storage = multer.diskStorage({
@@ -90,10 +91,12 @@ module.exports = {
                 })
 			}else{
 				let title = req.body.title
-				console.log(title)
-				let time = req.body.time
+				let time = moment(req.body.time).format('YYYY-MM-DD')
 				//let img = req.body.title
 				let detial = req.body.detial
+				console.log(title)
+				console.log(time)
+				console.log(detial)
 				if(!title){
 					return res.json({
 						status: 404,
@@ -119,7 +122,9 @@ module.exports = {
 					})
 				}
 				let arr = [title,time,detial]
+				console.log(arr)
 				let result = await data.addNews(arr)
+				console.log(result)
 				if(result){
 					return res.json({
 						status: 200,
